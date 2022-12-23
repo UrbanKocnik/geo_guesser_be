@@ -34,6 +34,11 @@
 $ npm install
 ```
 
+## Update packages
+```bash
+$ npm i npm-check@latest -g
+```
+
 ## Running the app
 
 ```bash
