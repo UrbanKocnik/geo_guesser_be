@@ -94,61 +94,15 @@ export class AuthService {
           });
         }
     }
-    async update(user: User, userDto: AuthUpdateDto): Promise<User> {
-      if (userDto.password) {
-        if (userDto.oldPassword) {
-          const currentUser = await this.usersService.findOne({
-            id: user.id,
-          });
-  
-          const isValidOldPassword = await bcrypt.compare(
-            userDto.oldPassword,
-            currentUser.password,
-          );
-  
-          if (!isValidOldPassword) {
-            throw new HttpException(
-              {
-                status: HttpStatus.UNPROCESSABLE_ENTITY,
-                errors: {
-                  oldPassword: 'incorrectOldPassword',
-                },
-              },
-              HttpStatus.UNPROCESSABLE_ENTITY,
-            );
-          }
-        } else {
-          throw new HttpException(
-            {
-              status: HttpStatus.UNPROCESSABLE_ENTITY,
-              errors: {
-                oldPassword: 'missingOldPassword',
-              },
-            },
-            HttpStatus.UNPROCESSABLE_ENTITY,
-          );
-        }
-      }
-
-      const saltOrRounds = 12;
-      const password = userDto.password;
-      const hashed_pw = await bcrypt.hash(password, saltOrRounds);          
-      userDto.password = hashed_pw;
-  
-      await this.usersService.update(user.id, userDto);
-  
-      return this.usersService.findOne({
-        id: user.id,
-      });
+    async update(user: User, userDto: AuthUpdateDto) {  
+      return await this.usersService.updateUser(user.id, user, userDto);
     }
 
-    async me(user: User): Promise<User> {
-      return this.usersService.findOne({
-        id: user.id,
-      });
+    async me(user: User) {
+      return this.usersService.findUser(user);
     }
   
-    async delete(user: User): Promise<void> {
-      await this.usersService.delete(user.id);
+    async delete(user: User) {
+      return await this.usersService.deleteUser(user.id, user);
     }
 }
