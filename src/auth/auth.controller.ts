@@ -11,20 +11,20 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 export class AuthController {
     constructor(public service: AuthService) {}
 
-    @Post('email/login')
+    @Post('login')
     @HttpCode(HttpStatus.OK)
     public async login(@Body() loginDto: AuthEmailLoginDto) {
       return this.service.validateLogin(loginDto, false);
     }
 
-    @Post('email/register')
+    @Post('register')
     @HttpCode(HttpStatus.CREATED)
     async register(@Body() createUserDto: AuthRegisterLoginDto) {
       return this.service.register(createUserDto);
     }               
 
     @Get('me')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.OK)
     public async me(@Request() request) {
       return this.service.me(request.user);
