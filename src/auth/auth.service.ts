@@ -7,10 +7,10 @@ import * as bcrypt from 'bcrypt';
 import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
 import * as crypto from 'crypto';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
-import { AuthUpdateDto } from './dto/auth-update.dto';
 import { RoleEnum } from 'src/roles/roles.enum';
 import { MailService } from 'src/mail/mail.service';
 import { ForgotService } from 'src/forgot/forgot.service';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -177,7 +177,7 @@ export class AuthService {
     }
   }
 
-  async update(user: User, userDto: AuthUpdateDto) {  
+  async update(user: User, userDto: UpdateUserDto) {  
     return await this.usersService.updateUser(user.id, user, userDto);
   }
 
