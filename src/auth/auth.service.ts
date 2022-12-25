@@ -146,11 +146,7 @@ export class AuthService {
   }
 
   async resetPassword(hash: string, password: string) {
-    const forgot = await this.forgotService.findOne({
-      where: {
-        hash,
-      },
-    });
+    const forgot = await this.forgotService.findOne({hash});
 
     if (!forgot) {
       throw new HttpException(
@@ -169,7 +165,7 @@ export class AuthService {
     const user = forgot.user;
     user.password = hashed_pw;
     await user.save();
-    await this.forgotService.softDelete(forgot.id);
+    await this.forgotService.delete(forgot.id);
 
     return{
       message: "Password reset",
