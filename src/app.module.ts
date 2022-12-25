@@ -1,4 +1,4 @@
-import Joi from '@hapi/joi';
+import * as path from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
@@ -9,6 +9,14 @@ import { TypeOrmConfigService } from './database/typeorm-config.service';
 import { DataSource } from 'typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import mailConfig from './config/mail.config';
+import { I18nModule } from 'nestjs-i18n/dist/i18n.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HeaderResolver, I18nService } from 'nestjs-i18n';
+import { MailConfigService } from './mail/mail-config.service';
+import { RolesModule } from './roles/roles.module';
+import { ForgotModule } from './forgot/forgot.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -17,7 +25,8 @@ import { AuthModule } from './auth/auth.module';
       load: [
         databaseConfig,
         authConfig,
-        appConfig
+        appConfig,
+        mailConfig
       ],
       envFilePath: ['.env'],
     }),
@@ -28,8 +37,31 @@ import { AuthModule } from './auth/auth.module';
         return dataSource;
       },
     }),
+    MailerModule.forRootAsync({
+      useClass: MailConfigService,
+    }),
+    I18nModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        fallbackLanguage: configService.get('app.fallbackLanguage'),
+        loaderOptions: { path: path.join(__dirname, '/i18n/'), watch: true },
+      }),
+      resolvers: [
+        {
+          use: HeaderResolver,
+          useFactory: (configService: ConfigService) => {
+            return [configService.get('app.headerLanguage')];
+          },
+          inject: [ConfigService],
+        },
+      ],
+      imports: [ConfigModule],
+      inject: [ConfigService],
+    }),
     UsersModule,
     AuthModule,
+    RolesModule,
+    ForgotModule,
+    MailModule
   ],
   controllers: [],
   providers: [],
