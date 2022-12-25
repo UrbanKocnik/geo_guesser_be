@@ -1,34 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AbstractService } from 'src/common/abstract.service';
 import { DeepPartial } from 'src/utils/types/deep-partial.type';
-import { FindOptions } from 'src/utils/types/find-options.type';
 import { Repository } from 'typeorm';
 import { Forgot } from './entities/forgot.entity';
 
 @Injectable()
-export class ForgotService {
+export class ForgotService extends AbstractService {
   constructor(
     @InjectRepository(Forgot)
     private forgotRepository: Repository<Forgot>,
-  ) {}
-
-  async findOne(options: FindOptions<Forgot>) {
-    return this.forgotRepository.findOne({
-      where: options.where,
-    });
-  }
-
-  async findMany(options: FindOptions<Forgot>) {
-    return this.forgotRepository.find({
-      where: options.where,
-    });
+  ) {
+    super(forgotRepository)
   }
 
   async create(data: DeepPartial<Forgot>) {
     return this.forgotRepository.save(this.forgotRepository.create(data));
   }
 
-  async softDelete(id: number): Promise<void> {
+  async delete(id: number): Promise<void> {
     await this.forgotRepository.delete(id);
   }
 }
