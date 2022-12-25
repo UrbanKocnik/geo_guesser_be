@@ -42,7 +42,7 @@ export abstract class AbstractService {
     }
 
     async findOne(where, relations:any[] = []): Promise<any>{
-        return this.repository.findOneOrFail({
+        return this.repository.findOne({
           where,
           relations
         });
