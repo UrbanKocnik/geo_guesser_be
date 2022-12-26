@@ -1,10 +1,20 @@
 import { Exclude } from 'class-transformer';
+import { Guess } from 'src/guesses/entity/guesses.entity';
+import { Location } from 'src/locations/entity/locations.entity';
 import { Role } from 'src/roles/entity/roles.entity';
-import { EntityHelper } from 'src/utils/entity-helper';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('users')
-export class User extends EntityHelper {
+export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -15,17 +25,23 @@ export class User extends EntityHelper {
   @Exclude({ toPlainOnly: true })
   password: string;
 
-  @Column({nullable: true })
+  @Column({ nullable: true })
   first_name: string | null;
 
-  @Column({nullable: true })
+  @Column({ nullable: true })
   last_name: string | null;
 
-  @Column({nullable: true })
+  @Column({ nullable: true })
   profile_image: string | null;
 
-  @ManyToOne(() => Role, role => role.users)
+  @ManyToOne(() => Role, (role) => role.users)
   role: Role;
+
+  @OneToMany(() => Location, (location: Location) => location.user)
+  public locations: Location[];
+
+  @OneToMany(() => Guess, (guess: Guess) => guess.user)
+  public guesses: Guess[];
 
   @CreateDateColumn()
   createdAt: Date;
