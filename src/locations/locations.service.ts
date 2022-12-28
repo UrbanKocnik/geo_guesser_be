@@ -92,18 +92,20 @@ export class LocationsService extends AbstractService {
     };
   }
 
-  async getBestLocationGuesses(
+  async getUserLocationGuesses(
     user: User,
     page: number,
     take: number,
     condition: string,
+    order: string,
   ) {
     const loggedUser = await this.getUser(user.id);
-    const guesses = await this.guessesService.bestUserGuessesPaginate(
+    const guesses = await this.guessesService.userGuessesPaginate(
       user.id,
       page,
       take,
       condition,
+      order,
     );
 
     if (guesses.meta.total_entries === 0) {
@@ -113,7 +115,7 @@ export class LocationsService extends AbstractService {
       };
     }
     return {
-      message: 'Closest guesses of user fetched',
+      message: 'User guesses fetched',
       data: { guesses, loggedUser },
     };
   }

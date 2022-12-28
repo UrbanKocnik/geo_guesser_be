@@ -69,15 +69,16 @@ export class GuessesService extends AbstractService {
     };
   }
 
-  async bestUserGuessesPaginate(
+  async userGuessesPaginate(
     where,
     page = 1,
     take = 2,
-    condition = 'error_distance',
+    condition,
+    order = 'ASC',
   ): Promise<PaginatedResult> {
     const [data, total_entries] = await this.repository.findAndCount({
       order: {
-        [condition]: 'ASC',
+        [condition]: order,
       },
       where: {
         user: {
