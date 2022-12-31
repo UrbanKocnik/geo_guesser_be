@@ -12,8 +12,11 @@ export abstract class AbstractService {
         return await this.repository.find({relations});
     }    
 
-    async paginate(page = 1, take = 2, relations: any[] = []): Promise<PaginatedResult>{
+    async paginate(page = 1, take = 2, condition = "createdAt", relations: any[] = []): Promise<PaginatedResult>{
         const [data, total_entries] = await this.repository.findAndCount({
+            order:{
+                [condition]: 'DESC'
+            },
             take, 
             skip: (page - 1) * take, //to pomeni 1. stran uzema iz 0, 2. iz 1 etc ker se zacne stet z 0
             relations

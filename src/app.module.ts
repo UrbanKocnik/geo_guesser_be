@@ -17,6 +17,8 @@ import { MailConfigService } from './mail/mail-config.service';
 import { RolesModule } from './roles/roles.module';
 import { ForgotModule } from './forgot/forgot.module';
 import { MailModule } from './mail/mail.module';
+import { LocationsModule } from './locations/locations.module';
+import { GuessesModule } from './guesses/guesses.module';
 
 @Module({
   imports: [
@@ -61,7 +63,9 @@ import { MailModule } from './mail/mail.module';
     AuthModule,
     RolesModule,
     ForgotModule,
-    MailModule
+    MailModule,
+    LocationsModule,
+    GuessesModule
   ],
   controllers: [],
   providers: [],

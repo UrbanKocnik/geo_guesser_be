@@ -1,24 +1,34 @@
 import { User } from 'src/users/entities/user.entity';
+import { Location } from 'src/locations/entity/locations.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('roles')
-export class Role {
+@Entity('guesses')
+export class Guess {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   name: string;
 
-  @OneToMany(() => User, (user: User) => user.role)
-  public users: User[];
+  @Column()
+  coordinates: string;
+
+  @Column()
+  error_distance: number;
+
+  @ManyToOne(() => User, (user: User) => user.guesses)
+  public user: User;
+
+  @ManyToOne(() => Location, (location: Location) => location.guesses)
+  public location: Location;
 
   @CreateDateColumn()
   createdAt: Date;

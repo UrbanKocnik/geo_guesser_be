@@ -6,109 +6,113 @@ import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { GuessesService } from 'src/guesses/guesses.service';
 
 @Injectable()
 export class UsersService extends AbstractService {
-    constructor(
-        @InjectRepository(User)
-        private usersRepository: Repository<User>,
-      ) {
-        super(usersRepository)
-      }
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {
+    super(usersRepository);
+  }
 
-      async findUser(user: User){
-        const found_user = await super.findOne({id: user.id})
-        return {
-          data: found_user,
-          message: "Fetched user"      
-        }
-      }
+  async findUser(user: User) {
+    const found_user = await super.findOne({ id: user.id });
+    return {
+      data: found_user,
+      message: 'Fetched user',
+    };
+  }
 
-      async updateUser(uid: number, user: User, userDto: UpdateUserDto) {
-        const loggedUser = await super.findOne({id: user.id}, ['role'])
-        const editedUser = await super.findOne({id: uid}, ['role'])
-        if(editedUser.id != loggedUser.id){
-          //if stavek preveri ali je tisti ki poskusa editat lastnik ali admin, ce ni nic vrze error
+  async updateUser(uid: number, user: User, userDto: UpdateUserDto) {
+    const loggedUser = await super.findOne({ id: user.id }, ['role']);
+    const editedUser = await super.findOne({ id: uid }, ['role']);
+    if (editedUser.id != loggedUser.id) {
+      //if stavek preveri ali je tisti ki poskusa editat lastnik ali admin, ce ni nic vrze error
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          errors: {
+            error: 'Operation unauthorized',
+          },
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (userDto.password) {
+      if (userDto.old_password) {
+        const isValidOldPassword = await bcrypt.compare(
+          userDto.old_password,
+          editedUser.password,
+        );
+
+        if (!isValidOldPassword) {
           throw new HttpException(
             {
-              status: HttpStatus.UNAUTHORIZED,
+              status: HttpStatus.UNPROCESSABLE_ENTITY,
               errors: {
-                error: 'Operation unauthorized',
+                oldPassword: 'Incorrect old password',
               },
             },
-            HttpStatus.UNAUTHORIZED,
+            HttpStatus.UNPROCESSABLE_ENTITY,
           );
         }
-        
-        if (userDto.password) {
-          if (userDto.old_password) {    
-            const isValidOldPassword = await bcrypt.compare(
-              userDto.old_password,
-              editedUser.password,
-            );
-    
-            if (!isValidOldPassword) {
-              throw new HttpException(
-                {
-                  status: HttpStatus.UNPROCESSABLE_ENTITY,
-                  errors: {
-                    oldPassword: 'Incorrect old password',
-                  },
-                },
-                HttpStatus.UNPROCESSABLE_ENTITY,
-              );
-            }
-          } else {
-            throw new HttpException(
-              {
-                status: HttpStatus.UNPROCESSABLE_ENTITY,
-                errors: {
-                  oldPassword: 'Missing old password',
-                },
-              },
-              HttpStatus.UNPROCESSABLE_ENTITY,
-            );
-          }
-        }
-  
-        if(userDto.password){
-          const saltOrRounds = 12;
-          const password = userDto.password;
-          const hashed_pw = await bcrypt.hash(password, saltOrRounds);          
-          userDto.password = hashed_pw;
-        } 
-        
-        delete userDto.old_password;
-
-        await super.update(editedUser.id, userDto);  
-        const edited_user = await super.findOne({
-          id: editedUser.id,
-        });
-        return {
-          data: edited_user,
-          message: "Edited user info"
-        }
-      }
-
-      async deleteUser(uid: number, user: User){
-        const loggedUser = await super.findOne({id: user.id}, ['role'])
-        const deletedUser = await super.findOne({id: uid}, ['role'])
-        if(deletedUser.id != loggedUser.id && ![RoleEnum.admin].includes(loggedUser.role.id)){
-          throw new HttpException(
-            {
-              status: HttpStatus.UNAUTHORIZED,
-              errors: {
-                error: 'Operation unauthorized',
-              },
+      } else {
+        throw new HttpException(
+          {
+            status: HttpStatus.UNPROCESSABLE_ENTITY,
+            errors: {
+              oldPassword: 'Missing old password',
             },
-            HttpStatus.UNAUTHORIZED,
-          );
-        }
-        const deleted_user = await super.findOne({id: deletedUser.id})
-        await super.delete(deletedUser.id)
-        return {
-          data: deleted_user,
-          message: "Deleted user"
-        }
+          },
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
       }
+    }
+
+    if (userDto.password) {
+      const saltOrRounds = 12;
+      const password = userDto.password;
+      const hashed_pw = await bcrypt.hash(password, saltOrRounds);
+      userDto.password = hashed_pw;
+    }
+
+    delete userDto.old_password;
+
+    await super.update(editedUser.id, userDto);
+    const edited_user = await super.findOne({
+      id: editedUser.id,
+    });
+    return {
+      data: edited_user,
+      message: 'Edited user info',
+    };
+  }
+
+  async deleteUser(uid: number, user: User) {
+    const loggedUser = await super.findOne({ id: user.id }, ['role']);
+    const deletedUser = await super.findOne({ id: uid }, ['role']);
+    if (
+      deletedUser.id != loggedUser.id &&
+      ![RoleEnum.admin].includes(loggedUser.role.id)
+    ) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          errors: {
+            error: 'Operation unauthorized',
+          },
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    const deleted_user = await super.findOne({ id: deletedUser.id });
+    await super.delete(deletedUser.id);
+    return {
+      data: deleted_user,
+      message: 'Deleted user',
+    };
+  }
 }
