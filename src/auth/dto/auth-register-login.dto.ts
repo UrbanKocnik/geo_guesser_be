@@ -11,11 +11,15 @@ export class AuthRegisterLoginDto {
   @MinLength(6)
   password: string;
 
+  @ApiProperty()
+  @MinLength(6)
+  password_confirm: string;
+
   @ApiProperty({ example: 'John' })
   @IsNotEmpty()
-  firstName: string;
+  first_name: string;
 
   @ApiProperty({ example: 'Doe' })
   @IsNotEmpty()
-  lastName: string;
+  last_name: string;
 }

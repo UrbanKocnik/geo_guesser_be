@@ -44,6 +44,8 @@ export class GuessesService extends AbstractService {
     take = 2,
     condition = 'error_distance',
   ): Promise<PaginatedResult> {
+    take = take * page;
+    console.log(take);
     const [data, total_entries] = await this.repository.findAndCount({
       order: {
         [condition]: 'ASC',
@@ -54,7 +56,6 @@ export class GuessesService extends AbstractService {
         },
       },
       take,
-      skip: (page - 1) * take,
       relations: {
         user: true,
       },
@@ -76,6 +77,7 @@ export class GuessesService extends AbstractService {
     condition,
     order = 'ASC',
   ): Promise<PaginatedResult> {
+    take = take * page;
     const [data, total_entries] = await this.repository.findAndCount({
       order: {
         [condition]: order,
@@ -86,7 +88,6 @@ export class GuessesService extends AbstractService {
         },
       },
       take,
-      skip: (page - 1) * take,
       relations: {
         location: true,
       },

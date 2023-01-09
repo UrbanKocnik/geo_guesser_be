@@ -14,102 +14,87 @@ import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private jwtService: JwtService,
-        private usersService: UsersService,
-        private forgotService: ForgotService,
-        private mailService: MailService 
-      ) {}
+  constructor(
+    private jwtService: JwtService,
+    private usersService: UsersService,
+    private forgotService: ForgotService,
+    private mailService: MailService,
+  ) {}
 
-    async validateLogin(
-        loginDto: AuthEmailLoginDto
-      ){
-        const user = await this.usersService.findOne({
-          email: loginDto.email,
-        });
-    
-        if (!user) {
-          throw new HttpException(
-            {
-              status: HttpStatus.UNPROCESSABLE_ENTITY,
-              errors: {
-                email: 'notFound',
-              },
-            },
-            HttpStatus.UNPROCESSABLE_ENTITY,
-          );
-        }
-    
-        const isValidPassword = await bcrypt.compare(
-          loginDto.password,
-          user.password,
-        );
-    
-        if (isValidPassword) {
-          const payload = { id: user.id, email: loginDto.email };
+  async validateLogin(loginDto: AuthEmailLoginDto) {
+    const user = await this.usersService.findOne({
+      email: loginDto.email,
+    });
 
-          const token = await this.jwtService.sign(payload);
-    
-          return { 
-            message: "Successfully logged in",
-            data: {token, user: user }
-          }
-        } 
-        else {
-          throw new HttpException(
-            {
-              status: HttpStatus.UNPROCESSABLE_ENTITY,
-              errors: {
-                password: 'incorrectPassword',
-              },
-            },
-            HttpStatus.UNPROCESSABLE_ENTITY,
-          );
-        }
-      }
-
-    async register(dto: AuthRegisterLoginDto) {
-    const hash = crypto
-        .createHash('sha256')
-        .update(randomStringGenerator())
-        .digest('hex');
-
-        const user = await this.usersService.findOne({
-          email: dto.email,
-        });
-    
-        if (user) {
-          throw new HttpException(
-            {
-              status: HttpStatus.UNPROCESSABLE_ENTITY,
-              errors: {
-                email: 'alreadyExists',
-              },
-            },
-            HttpStatus.UNPROCESSABLE_ENTITY,
-          );
-        }
-        else{
-          const saltOrRounds = 12;
-          const password = dto.password;
-          const hashed_pw = await bcrypt.hash(password, saltOrRounds);          
-          dto.password = hashed_pw;
-          
-          const created_user = await this.usersService.create({
-            email: dto.email,
-            password: dto.password,
-            role: RoleEnum.user,
-            hash
-          });
-
-          return{
-            message: "User registered",
-            data: created_user
-          }
-        }        
+    if (!user) {
+      return {
+        message: 'Wrong credentials',
+      };
     }
 
-  async forgotPassword(email: string){
+    const isValidPassword = await bcrypt.compare(
+      loginDto.password,
+      user.password,
+    );
+
+    if (isValidPassword) {
+      const payload = { id: user.id, email: loginDto.email };
+
+      const token = await this.jwtService.sign(payload);
+
+      return {
+        message: 'Successfully logged in',
+        data: { token, user: user },
+      };
+    } else {
+      return {
+        message: 'Wrong credentials',
+      };
+    }
+  }
+
+  async register(dto: AuthRegisterLoginDto) {
+    const hash = crypto
+      .createHash('sha256')
+      .update(randomStringGenerator())
+      .digest('hex');
+
+    const user = await this.usersService.findOne({
+      email: dto.email,
+    });
+
+    if (user) {
+      return {
+        message: 'Email exists',
+      };
+    } else {
+      if (dto.password !== dto.password_confirm) {
+        return {
+          message: 'Passwords do not match',
+        };
+      }
+      const saltOrRounds = 12;
+      const password = dto.password;
+      const hashed_pw = await bcrypt.hash(password, saltOrRounds);
+      dto.password = hashed_pw;
+
+      const created_user = await this.usersService.create({
+        email: dto.email,
+        password: dto.password,
+        role: RoleEnum.user,
+        hash,
+        first_name: dto.first_name,
+        last_name: dto.last_name,
+      });
+
+      return {
+        message: 'User registered',
+        data: created_user,
+      };
+    }
+  }
+
+  async forgotPassword(email: string) {
     const user = await this.usersService.findOne({
       email,
     });
@@ -136,17 +121,17 @@ export class AuthService {
 
       await this.mailService.forgotPassword({
         to: email,
-        hash
+        hash,
       });
-      return{
-        message: "Forgot password email sent",
-        data: email
-      }
+      return {
+        message: 'Forgot password email sent',
+        data: email,
+      };
     }
   }
 
   async resetPassword(hash: string, password: string) {
-    const forgot = await this.forgotService.findOne({hash});
+    const forgot = await this.forgotService.findOne({ hash });
 
     if (!forgot) {
       throw new HttpException(
@@ -161,19 +146,19 @@ export class AuthService {
     }
 
     const saltOrRounds = 12;
-    const hashed_pw = await bcrypt.hash(password, saltOrRounds);          
+    const hashed_pw = await bcrypt.hash(password, saltOrRounds);
     const user = forgot.user;
     user.password = hashed_pw;
     await user.save();
     await this.forgotService.delete(forgot.id);
 
-    return{
-      message: "Password reset",
-      data: user
-    }
+    return {
+      message: 'Password reset',
+      data: user,
+    };
   }
 
-  async update(user: User, userDto: UpdateUserDto) {  
+  async update(user: User, userDto: UpdateUserDto) {
     return await this.usersService.updateUser(user.id, user, userDto);
   }
 
