@@ -6,7 +6,6 @@ import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { GuessesService } from 'src/guesses/guesses.service';
 
 @Injectable()
 export class UsersService extends AbstractService {
@@ -72,14 +71,22 @@ export class UsersService extends AbstractService {
       }
     }
 
-    if (userDto.password) {
-      const saltOrRounds = 12;
-      const password = userDto.password;
-      const hashed_pw = await bcrypt.hash(password, saltOrRounds);
-      userDto.password = hashed_pw;
+    if (userDto.password && userDto.password_confirm) {
+      if (userDto.password === userDto.password_confirm) {
+        const saltOrRounds = 12;
+        const password = userDto.password;
+        const hashed_pw = await bcrypt.hash(password, saltOrRounds);
+        userDto.password = hashed_pw;
+      } else {
+        return {
+          data: null,
+          message: 'Password do not match',
+        };
+      }
     }
 
     delete userDto.old_password;
+    delete userDto.password_confirm;
 
     await super.update(editedUser.id, userDto);
     const edited_user = await super.findOne({

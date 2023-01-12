@@ -22,13 +22,13 @@ export class CreateUserDto {
 
   @ApiProperty({ example: 'John' })
   @IsOptional()
-  first_name: string
+  first_name: string;
 
   @ApiProperty({ example: 'Doe' })
   @IsOptional()
-  last_name: string
+  last_name: string;
 
   @ApiProperty({ type: () => String })
   @IsOptional()
-  profile_image: string;
+  image: string;
 }

@@ -79,7 +79,7 @@ export class LocationsController {
   @SerializeOptions({
     groups: ['exposeProvider'],
   })
-  @Get('user')
+  @Get('guesses/user')
   async userGuesses(
     @Request() request,
     @Query('page') page = 1,
@@ -87,6 +87,26 @@ export class LocationsController {
     @Query('condition') condition = 'createdAt',
   ) {
     return this.locationsService.getUserLocationGuesses(
+      request.user,
+      page,
+      take,
+      condition,
+      'DESC',
+    );
+  }
+
+  @ApiBearerAuth()
+  @SerializeOptions({
+    groups: ['exposeProvider'],
+  })
+  @Get('user')
+  async userLocations(
+    @Request() request,
+    @Query('page') page = 1,
+    @Query('take') take = 4,
+    @Query('condition') condition = 'createdAt',
+  ) {
+    return this.locationsService.getUserLocations(
       request.user,
       page,
       take,
