@@ -32,7 +32,7 @@ export class User {
   last_name: string | null;
 
   @Column({ nullable: true })
-  profile_image: string | null;
+  image: string | null;
 
   @ManyToOne(() => Role, (role) => role.users)
   role: Role;

@@ -8,6 +8,7 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -34,9 +35,17 @@ export class UploadController {
       }),
     }),
   )
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
+  uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    configService: ConfigService,
+  ) {
+    /*
+    const domain = configService.get('app.publicBackendDomain');
+    const img_url = domain + `/api/${file.path}`;
+    console.log(domain, img_url);*/
+    const img_url = `http://localhost:4000/api/${file.path}`;
     return {
-      url: `/api/${file.path}`,
+      url: img_url,
     };
   }
 

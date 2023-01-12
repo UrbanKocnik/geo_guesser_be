@@ -25,6 +25,12 @@ export class Location {
   @Column()
   image: string;
 
+  @Column({ type: 'double precision' })
+  lat: number;
+
+  @Column({ type: 'double precision' })
+  long: number;
+
   @ManyToOne(() => User, (user: User) => user.locations)
   public user: User;
 

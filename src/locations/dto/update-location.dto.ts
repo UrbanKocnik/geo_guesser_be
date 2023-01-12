@@ -13,4 +13,12 @@ export class UpdateLocationDto {
   @ApiProperty()
   @IsOptional()
   coordinates?: string | null;
+
+  @ApiProperty()
+  @IsOptional()
+  long?: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  lat?: number | null;
 }
