@@ -3,10 +3,6 @@ import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Location } from 'src/locations/entity/locations.entity';
 
 export class CreateGuessDto {
-  @ApiProperty({ example: 'Jezero Bled' })
-  @IsNotEmpty()
-  name: string;
-
   @ApiProperty()
   @IsNotEmpty()
   error_distance: number;

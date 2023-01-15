@@ -25,7 +25,6 @@ export class GuessesService extends AbstractService {
   async createGuess(user: User, guessDto: CreateGuessDto) {
     const loggedUser = await this.getUser(user.id);
     const new_guess = await super.create({
-      name: guessDto.name,
       lat: guessDto.lat,
       long: guessDto.long,
       user: loggedUser,
