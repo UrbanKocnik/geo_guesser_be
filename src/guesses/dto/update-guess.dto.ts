@@ -12,5 +12,9 @@ export class UpdateGuessDto {
 
   @ApiProperty()
   @IsOptional()
-  coordinates?: string | null;
+  long?: number | null;
+
+  @ApiProperty()
+  @IsOptional()
+  lat?: number | null;
 }

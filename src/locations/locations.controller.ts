@@ -119,7 +119,7 @@ export class LocationsController {
   @SerializeOptions({
     groups: ['exposeProvider'],
   })
-  @Get(':id')
+  @Get('guesses/:id')
   async allGuessesOfLocation(
     @Param('id') id: number,
     @Query('page') page = 1,
@@ -127,6 +127,15 @@ export class LocationsController {
     @Query('condition') condition = 'error_distance',
   ) {
     return this.locationsService.getLocationGuesses(id, page, take, condition);
+  }
+
+  @ApiBearerAuth()
+  @SerializeOptions({
+    groups: ['exposeProvider'],
+  })
+  @Get(':id')
+  async getLocation(@Param('id') id: number) {
+    return this.locationsService.getLocation(id);
   }
 
   @ApiBearerAuth()
@@ -141,7 +150,7 @@ export class LocationsController {
 
   @ApiBearerAuth()
   @Delete(':id')
-  public async deleteBox(@Request() request, @Param('id') id: number) {
+  public async deleteLocation(@Request() request, @Param('id') id: number) {
     return this.locationsService.deleteLocation(id, request.user);
   }
 }

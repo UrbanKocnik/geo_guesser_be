@@ -26,7 +26,8 @@ export class GuessesService extends AbstractService {
     const loggedUser = await this.getUser(user.id);
     const new_guess = await super.create({
       name: guessDto.name,
-      coordinates: guessDto.coordinates,
+      lat: guessDto.lat,
+      long: guessDto.long,
       user: loggedUser,
       error_distance: guessDto.error_distance,
       location: guessDto.location,
