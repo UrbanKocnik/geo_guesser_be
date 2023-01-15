@@ -95,6 +95,14 @@ export class LocationsService extends AbstractService {
     };
   }
 
+  async getLocation(id: number) {
+    const location = await super.findOne({ id });
+    return {
+      message: 'Location data and guesses fetched',
+      data: location,
+    };
+  }
+
   async getUserLocations(
     user: User,
     page: number,
@@ -176,10 +184,8 @@ export class LocationsService extends AbstractService {
   async deleteLocation(id: number, user: User): Promise<any> {
     const loggedUser = await this.getUser(user.id);
     const location = await super.findOne({ id }, ['user']);
-    if (
-      location.user.id != loggedUser.id &&
-      ![RoleEnum.admin].includes(loggedUser.role.id)
-    ) {
+    console.log(location.user.id, loggedUser.id);
+    if (location.user.id != loggedUser.id) {
       throw new HttpException(
         {
           status: HttpStatus.UNAUTHORIZED,

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Location } from 'src/locations/entity/locations.entity';
 
 export class CreateGuessDto {
@@ -12,8 +12,12 @@ export class CreateGuessDto {
   error_distance: number;
 
   @ApiProperty()
-  @IsNotEmpty()
-  coordinates: string;
+  @IsOptional()
+  long: number;
+
+  @ApiProperty()
+  @IsOptional()
+  lat: number;
 
   @ApiProperty()
   @IsNotEmpty()

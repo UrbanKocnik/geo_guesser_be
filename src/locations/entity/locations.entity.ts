@@ -20,9 +20,6 @@ export class Location {
   name: string;
 
   @Column()
-  coordinates: string;
-
-  @Column()
   image: string;
 
   @Column({ type: 'double precision' })

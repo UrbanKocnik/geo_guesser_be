@@ -18,8 +18,11 @@ export class Guess {
   @Column()
   name: string;
 
-  @Column()
-  coordinates: string;
+  @Column({ type: 'double precision' })
+  lat: number;
+
+  @Column({ type: 'double precision' })
+  long: number;
 
   @Column()
   error_distance: number;
