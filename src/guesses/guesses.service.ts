@@ -4,7 +4,7 @@ import { AbstractService } from 'src/common/abstract.service';
 import { PaginatedResult } from 'src/common/paginated-result.interface';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
-import { Repository } from 'typeorm';
+import { Long, Repository } from 'typeorm';
 import { CreateGuessDto } from './dto/create-guess.dto';
 import { Guess } from './entity/guesses.entity';
 
@@ -24,16 +24,22 @@ export class GuessesService extends AbstractService {
 
   async createGuess(user: User, guessDto: CreateGuessDto) {
     const loggedUser = await this.getUser(user.id);
-    const new_guess = await super.create({
-      lat: guessDto.lat,
-      long: guessDto.long,
-      user: loggedUser,
-      error_distance: guessDto.error_distance,
-      location: guessDto.location,
-    });
+    let guess = await this.userExistingGuess(user.id, guessDto.location.id);
+    if (guess) {
+      await this.update(guess.id, guessDto);
+    } else {
+      guess = await super.create({
+        name: guessDto.name,
+        lat: guessDto.lat,
+        long: guessDto.long,
+        user: loggedUser,
+        error_distance: guessDto.error_distance,
+        location: guessDto.location,
+      });
+    }
 
     return {
-      data: new_guess,
+      data: guess,
       message: 'User made a guess',
     };
   }
@@ -100,5 +106,22 @@ export class GuessesService extends AbstractService {
         last_page: Math.ceil(total_entries / take),
       },
     };
+  }
+
+  async userExistingGuess(
+    user_id: number,
+    location_id: number,
+  ): Promise<Guess> {
+    const data = await this.repository.findOne({
+      where: {
+        user: {
+          id: user_id,
+        },
+        location: {
+          id: location_id,
+        },
+      },
+    });
+    return data;
   }
 }

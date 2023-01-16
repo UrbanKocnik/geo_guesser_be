@@ -16,6 +16,9 @@ export class Guess {
   id: number;
 
   @Column()
+  @Column()
+  name: string;
+
   @Column({ type: 'double precision' })
   lat: number;
 

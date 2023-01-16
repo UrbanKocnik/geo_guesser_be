@@ -5,6 +5,10 @@ import { Location } from 'src/locations/entity/locations.entity';
 export class CreateGuessDto {
   @ApiProperty()
   @IsNotEmpty()
+  name: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
   error_distance: number;
 
   @ApiProperty()
