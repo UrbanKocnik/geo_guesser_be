@@ -86,7 +86,7 @@ export class LocationsService extends AbstractService {
     if (guesses.meta.total_entries === 0) {
       return {
         message: 'Location data fetched',
-        data: location,
+        data: { location },
       };
     }
     return {

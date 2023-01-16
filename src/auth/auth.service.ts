@@ -22,9 +22,12 @@ export class AuthService {
   ) {}
 
   async validateLogin(loginDto: AuthEmailLoginDto) {
-    const user = await this.usersService.findOne({
-      email: loginDto.email,
-    });
+    const user = await this.usersService.findOne(
+      {
+        email: loginDto.email,
+      },
+      ['role'],
+    );
 
     if (!user) {
       return {
