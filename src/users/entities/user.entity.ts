@@ -1,6 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { Guess } from 'src/guesses/entity/guesses.entity';
 import { Location } from 'src/locations/entity/locations.entity';
+import { Log } from 'src/logger/entity/logger.entity';
 import { Role } from 'src/roles/entity/roles.entity';
 import {
   Column,
@@ -39,6 +40,9 @@ export class User {
 
   @OneToMany(() => Location, (location: Location) => location.user)
   public locations: Location[];
+
+  @OneToMany(() => Log, (log: Log) => log.user)
+  public log: Log[];
 
   @OneToMany(() => Guess, (guess: Guess) => guess.user)
   public guesses: Guess[];
