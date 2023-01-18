@@ -16,6 +16,7 @@ export abstract class AbstractService<T> {
     condition = 'createdAt',
     relations: any[] = [],
   ): Promise<PaginatedResult> {
+    const divider = take;
     take = take * page;
 
     const order = {};
@@ -31,7 +32,7 @@ export abstract class AbstractService<T> {
       meta: {
         total_entries,
         page,
-        last_page: Math.ceil(total_entries / take),
+        last_page: Math.ceil(total_entries / divider),
       },
     };
   }

@@ -212,6 +212,7 @@ export class LocationsService extends AbstractService<Location> {
     condition,
     order = 'DESC',
   ): Promise<PaginatedResult> {
+    const divider = take;
     take = take * page;
     const [data, total_entries] = await this.repository.findAndCount({
       order: {
@@ -229,7 +230,7 @@ export class LocationsService extends AbstractService<Location> {
       meta: {
         total_entries,
         page,
-        last_page: Math.ceil(total_entries / take),
+        last_page: Math.ceil(total_entries / divider),
       },
     };
   }
