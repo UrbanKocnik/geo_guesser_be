@@ -10,20 +10,20 @@ export class MailService {
     @I18n()
     private mailerService: MailerService,
     private configService: ConfigService,
-    private i18n: I18nService
+    private i18n: I18nService,
   ) {}
 
   async forgotPassword(mailData: MailData) {
     await this.mailerService.sendMail({
       to: mailData.to,
       subject: await this.i18n.t('common.resetPassword'),
-      text: `${this.configService.get('app.frontendDomain')}/password-change/${
+      text: `${this.configService.get('app.frontendDomain')}/reset/password/${
         mailData.hash
       } ${await this.i18n.t('common.resetPassword')}`,
       template: 'reset-password',
       context: {
         title: await this.i18n.t('common.resetPassword'),
-        url: `${this.configService.get('app.frontendDomain')}/password-change/${
+        url: `${this.configService.get('app.frontendDomain')}/reset/password/${
           mailData.hash
         }`,
         actionTitle: await this.i18n.t('common.resetPassword'),
