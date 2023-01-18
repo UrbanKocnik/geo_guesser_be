@@ -152,9 +152,8 @@ export class AuthService {
     const hashed_pw = await bcrypt.hash(password, saltOrRounds);
     const user = forgot.user;
     user.password = hashed_pw;
-    await user.save();
+    await this.usersService.update(user.id, user);
     await this.forgotService.delete(forgot.id);
-
     return {
       message: 'Password reset',
       data: user,
