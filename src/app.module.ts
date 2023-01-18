@@ -20,6 +20,7 @@ import { MailModule } from './mail/mail.module';
 import { LocationsModule } from './locations/locations.module';
 import { GuessesModule } from './guesses/guesses.module';
 import { UploadController } from './upload/upload.controller';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -66,7 +67,8 @@ import { UploadController } from './upload/upload.controller';
     ForgotModule,
     MailModule,
     LocationsModule,
-    GuessesModule
+    GuessesModule,
+    LoggerModule
   ],
   controllers: [UploadController],
   providers: [],
