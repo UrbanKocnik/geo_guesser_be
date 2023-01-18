@@ -9,7 +9,7 @@ import { CreateLogArrayDto } from './dto/create-log-array.dto copy';
 import { Log } from './entity/logger.entity';
 
 @Injectable()
-export class LoggerService extends AbstractService {
+export class LoggerService extends AbstractService<Log> {
   constructor(
     @InjectRepository(Log)
     private logRepository: Repository<Log>,

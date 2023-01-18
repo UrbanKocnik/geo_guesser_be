@@ -9,7 +9,7 @@ import { CreateGuessDto } from './dto/create-guess.dto';
 import { Guess } from './entity/guesses.entity';
 
 @Injectable()
-export class GuessesService extends AbstractService {
+export class GuessesService extends AbstractService<Guess> {
   constructor(
     @InjectRepository(Guess)
     private guessesRepository: Repository<Guess>,
