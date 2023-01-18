@@ -8,7 +8,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
-export class UsersService extends AbstractService {
+export class UsersService extends AbstractService<User> {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,

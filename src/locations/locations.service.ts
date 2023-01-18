@@ -13,7 +13,7 @@ import { Location } from './entity/locations.entity';
 import { locationsRepository } from './locations.repository';
 
 @Injectable()
-export class LocationsService extends AbstractService {
+export class LocationsService extends AbstractService<Location> {
   constructor(
     @InjectRepository(Location)
     private locationsRepository: Repository<Location>,

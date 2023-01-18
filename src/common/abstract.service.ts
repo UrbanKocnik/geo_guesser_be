@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DeleteResult, Relation, Repository, UpdateResult } from 'typeorm';
 import { PaginatedResult } from './paginated-result.interface';
 
 @Injectable()
-export abstract class AbstractService {
-  protected constructor(protected readonly repository: Repository<any>) {}
+export abstract class AbstractService<T> {
+  protected constructor(protected readonly repository: Repository<T>) {}
 
-  async all(relations: any[] = []): Promise<any[]> {
+  async all(relations: any[] = []): Promise<T[]> {
     return await this.repository.find({ relations });
   }
 
@@ -17,10 +17,12 @@ export abstract class AbstractService {
     relations: any[] = [],
   ): Promise<PaginatedResult> {
     take = take * page;
+
+    const order = {};
+    order[condition] = 'DESC';
+
     const [data, total_entries] = await this.repository.findAndCount({
-      order: {
-        [condition]: 'DESC',
-      },
+      order,
       take,
       relations,
     });
@@ -34,11 +36,11 @@ export abstract class AbstractService {
     };
   }
 
-  async create(data): Promise<any> {
+  async create(data): Promise<T> {
     return this.repository.save(data);
   }
 
-  async findRelations(where, relations: any[] = []): Promise<any[]> {
+  async findRelations(where, relations: any[] = []): Promise<T[]> {
     const query = this.repository.find({
       where,
       relations,
@@ -47,18 +49,18 @@ export abstract class AbstractService {
     return result;
   }
 
-  async findOne(where, relations: any[] = []): Promise<any> {
+  async findOne(where, relations: any[] = []): Promise<T> {
     return this.repository.findOne({
       where,
       relations,
     });
   }
 
-  async update(id: number, data): Promise<any> {
+  async update(id: number, data): Promise<UpdateResult> {
     return this.repository.update(id, data);
   }
 
-  async delete(id: number): Promise<any> {
+  async delete(id: number): Promise<DeleteResult> {
     return this.repository.delete(id);
   }
 }
