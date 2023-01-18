@@ -50,8 +50,8 @@ export class GuessesService extends AbstractService<Guess> {
     take = 2,
     condition = 'error_distance',
   ): Promise<PaginatedResult> {
+    const divider = take;
     take = take * page;
-    console.log(take);
     const [data, total_entries] = await this.repository.findAndCount({
       order: {
         [condition]: 'ASC',
@@ -71,7 +71,7 @@ export class GuessesService extends AbstractService<Guess> {
       meta: {
         total_entries,
         page,
-        last_page: Math.ceil(total_entries / take),
+        last_page: Math.ceil(total_entries / divider),
       },
     };
   }
@@ -83,6 +83,7 @@ export class GuessesService extends AbstractService<Guess> {
     condition,
     order = 'ASC',
   ): Promise<PaginatedResult> {
+    const divider = take;
     take = take * page;
     const [data, total_entries] = await this.repository.findAndCount({
       order: {
@@ -103,7 +104,7 @@ export class GuessesService extends AbstractService<Guess> {
       meta: {
         total_entries,
         page,
-        last_page: Math.ceil(total_entries / take),
+        last_page: Math.ceil(total_entries / divider),
       },
     };
   }
