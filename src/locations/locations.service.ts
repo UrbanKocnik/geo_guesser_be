@@ -62,11 +62,7 @@ export class LocationsService extends AbstractService<Location> {
   }
 
   async randomLocation() {
-    const result = await this.locationsRepository.query(`
-        SELECT *
-        FROM locations l
-        ORDER BY RANDOM()
-        LIMIT 1;`);
+    const result = await this.subLocationsRepository.randomLocation();
     return result;
   }
 
