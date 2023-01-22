@@ -25,7 +25,7 @@ export class LoggerService extends AbstractService<Log> {
   async getLogs(page: number, take: number, condition: string, user: User) {
     const loggedUser = await this.getUser(user.id);
     if ([RoleEnum.admin].includes(loggedUser.role.id)) {
-      const logs = await super.paginate(page, take, condition);
+      const logs = await super.paginate(page, take, condition, ['user']);
       if (logs.meta.total_entries === 0) {
         return {
           message: 'No logs',

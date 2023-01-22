@@ -31,7 +31,9 @@ export class Guess {
   @ManyToOne(() => User, (user: User) => user.guesses)
   public user: User;
 
-  @ManyToOne(() => Location, (location: Location) => location.guesses)
+  @ManyToOne(() => Location, (location: Location) => location.guesses, {
+    onDelete: 'CASCADE',
+  })
   public location: Location;
 
   @CreateDateColumn()
