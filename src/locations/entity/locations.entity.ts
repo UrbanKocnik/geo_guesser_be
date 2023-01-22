@@ -31,7 +31,9 @@ export class Location {
   @ManyToOne(() => User, (user: User) => user.locations)
   public user: User;
 
-  @OneToMany(() => Guess, (guess: Guess) => guess.location, { cascade: true })
+  @OneToMany(() => Guess, (guess: Guess) => guess.location, {
+    onDelete: 'CASCADE',
+  })
   public guesses: Guess[];
 
   @CreateDateColumn()
