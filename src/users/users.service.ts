@@ -17,7 +17,7 @@ export class UsersService extends AbstractService<User> {
   }
 
   async findUser(user: User) {
-    const found_user = await super.findOne({ id: user.id });
+    const found_user = await super.findOne({ id: user.id }, ['role']);
     return {
       data: found_user,
       message: 'Fetched user',
