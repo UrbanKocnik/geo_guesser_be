@@ -89,9 +89,12 @@ export class UsersService extends AbstractService<User> {
     delete userDto.password_confirm;
 
     await super.update(editedUser.id, userDto);
-    const edited_user = await super.findOne({
-      id: editedUser.id,
-    });
+    const edited_user = await super.findOne(
+      {
+        id: editedUser.id,
+      },
+      ['role'],
+    );
     return {
       data: edited_user,
       message: 'Edited user info',
