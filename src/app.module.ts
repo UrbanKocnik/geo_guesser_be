@@ -1,7 +1,6 @@
 import * as path from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import databaseConfig from './config/database.config';
 import authConfig from './config/auth.config';
 import appConfig from './config/app.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -21,18 +20,16 @@ import { LocationsModule } from './locations/locations.module';
 import { GuessesModule } from './guesses/guesses.module';
 import { UploadController } from './upload/upload.controller';
 import { LoggerModule } from './logger/logger.module';
+import databaseConfig from './config/database.config';
 
+const envPath = `${process.cwd()}/src/config/env/${process.env.NODE_ENV}.env`;
+console.log(envPath);
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [
-        databaseConfig,
-        authConfig,
-        appConfig,
-        mailConfig
-      ],
-      envFilePath: ['.env'],
+      load: [databaseConfig, authConfig, appConfig, mailConfig],
+      envFilePath: envPath,
     }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
@@ -68,7 +65,7 @@ import { LoggerModule } from './logger/logger.module';
     MailModule,
     LocationsModule,
     GuessesModule,
-    LoggerModule
+    LoggerModule,
   ],
   controllers: [UploadController],
   providers: [],
