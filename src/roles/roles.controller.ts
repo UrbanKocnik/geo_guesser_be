@@ -38,11 +38,6 @@ export class RolesController {
     return this.rolesService.getRoles(request.user, page, take);
   }
 
-  @Get('get/all')
-  async getRoles() {
-    return this.rolesService.getEasyRoles();
-  }
-
   @ApiBearerAuth()
   @Post('add')
   async create(@Request() request, @Body('name') name: string) {

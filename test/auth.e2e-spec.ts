@@ -72,10 +72,9 @@ describe('AuthController (E2E)', () => {
       return request(`${authEndpoint}`)
         .post('/login')
         .send(mockLoginUser)
-        .expect(200)
         .then((response: request.Response) => {
           userToken = response.body.data.token;
-          console.log(userToken);
+          expect(userToken).toBeTruthy();
         });
     });
   });
@@ -85,10 +84,9 @@ describe('AuthController (E2E)', () => {
       return request(`${authEndpoint}`)
         .post('/forgot/password')
         .send(mockResetUser)
-        .expect(200)
         .then((response: request.Response) => {
           hash = response.body.data.hash;
-          console.log(hash);
+          expect(hash).toBeTruthy();
         });
     });
   });
@@ -100,7 +98,7 @@ describe('AuthController (E2E)', () => {
         .send({ hash, password: 'newPassword' })
         .expect(200)
         .then((response: request.Response) => {
-          console.log(response.body);
+          expect(response.body.message).toBe('Password reset');
         });
     });
   });
@@ -110,9 +108,8 @@ describe('AuthController (E2E)', () => {
       return request(`${authEndpoint}`)
         .get('/me')
         .set('authorization', `Bearer ${userToken}`)
-        .expect(200)
         .then((response: request.Response) => {
-          console.log(response.body);
+          expect(response.body.data).toBeTruthy();
         });
     });
   });
@@ -123,9 +120,8 @@ describe('AuthController (E2E)', () => {
         .patch('/me')
         .send({ first_name: 'Edited' })
         .set('authorization', `Bearer ${userToken}`)
-        .expect(200)
         .then((response: request.Response) => {
-          console.log(response.body);
+          expect(response.body.data.first_name).toBe('Edited');
         });
     });
   });
@@ -135,9 +131,8 @@ describe('AuthController (E2E)', () => {
       return request(`${authEndpoint}`)
         .delete('/me')
         .set('authorization', `Bearer ${userToken}`)
-        .expect(200)
         .then((response: request.Response) => {
-          console.log(response.body);
+          expect(response.body.message).toBe('Deleted user');
         });
     });
   });

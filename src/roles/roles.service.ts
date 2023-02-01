@@ -40,14 +40,6 @@ export class RolesService extends AbstractService<Role> {
       data: roles,
     };
   }
-
-  async getEasyRoles() {
-    const roles = await super.all();
-    return {
-      message: 'Roles fetched',
-      data: roles,
-    };
-  }
   async addRole(user: User, name: string) {
     const loggedUser = await this.getUser(user.id);
     if (![RoleEnum.admin].includes(loggedUser.role.id)) {
