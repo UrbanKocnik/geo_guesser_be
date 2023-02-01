@@ -79,26 +79,6 @@ export class LocationsController {
   @SerializeOptions({
     groups: ['exposeProvider'],
   })
-  @Get('guesses/user')
-  async userGuesses(
-    @Request() request,
-    @Query('page') page = 1,
-    @Query('take') take = 3,
-    @Query('condition') condition = 'createdAt',
-  ) {
-    return this.locationsService.getUserLocationGuesses(
-      request.user,
-      page,
-      take,
-      condition,
-      'DESC',
-    );
-  }
-
-  @ApiBearerAuth()
-  @SerializeOptions({
-    groups: ['exposeProvider'],
-  })
   @Get('user')
   async userLocations(
     @Request() request,

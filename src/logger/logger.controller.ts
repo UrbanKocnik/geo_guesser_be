@@ -34,14 +34,12 @@ export class LoggerController {
     @Query('take') take = 100,
     @Query('condition') condition = 'createdAt',
   ) {
-    console.log('here');
     return this.loggerService.getLogs(page, take, condition, request.user);
   }
 
   @ApiBearerAuth()
   @Post('add')
   async create(@Request() request, @Body() loggerDto: CreateLogArrayDto) {
-    console.log(loggerDto);
     return this.loggerService.createLogEntries(request.user, loggerDto);
   }
 }

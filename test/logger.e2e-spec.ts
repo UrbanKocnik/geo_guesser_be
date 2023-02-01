@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { AuthEmailLoginDto } from 'src/auth/dto/auth-email-login.dto';
 import { Log } from '../src/logger/entity/logger.entity';
 
-describe('AuthController (E2E)', () => {
+describe('LoggerController (E2E)', () => {
   let app: INestApplication;
   beforeEach(async () => {
     const module = await Test.createTestingModule({}).compile();
