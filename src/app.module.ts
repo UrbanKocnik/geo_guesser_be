@@ -22,7 +22,10 @@ import { UploadController } from './upload/upload.controller';
 import { LoggerModule } from './logger/logger.module';
 import databaseConfig from './config/database.config';
 
-const envPath = `${process.cwd()}/src/config/env/${process.env.NODE_ENV}.env`;
+let envPath = `${process.cwd()}/src/config/env/dev.env`;
+if (process.env.NODE_ENV) {
+  envPath = `${process.cwd()}/src/config/env/${process.env.NODE_ENV}.env`;
+}
 console.log(envPath);
 @Module({
   imports: [
