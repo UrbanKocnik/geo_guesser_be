@@ -38,13 +38,19 @@ export class User {
   @ManyToOne(() => Role, (role) => role.users)
   role: Role;
 
-  @OneToMany(() => Location, (location: Location) => location.user)
+  @OneToMany(() => Location, (location: Location) => location.user, {
+    onDelete: 'CASCADE',
+  })
   public locations: Location[];
 
-  @OneToMany(() => Log, (log: Log) => log.user)
+  @OneToMany(() => Log, (log: Log) => log.user, {
+    onDelete: 'CASCADE',
+  })
   public log: Log[];
 
-  @OneToMany(() => Guess, (guess: Guess) => guess.user)
+  @OneToMany(() => Guess, (guess: Guess) => guess.user, {
+    onDelete: 'CASCADE',
+  })
   public guesses: Guess[];
 
   @CreateDateColumn()

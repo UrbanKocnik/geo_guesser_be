@@ -28,7 +28,9 @@ export class Location {
   @Column({ type: 'double precision' })
   long: number;
 
-  @ManyToOne(() => User, (user: User) => user.locations)
+  @ManyToOne(() => User, (user: User) => user.locations, {
+    onDelete: 'CASCADE',
+  })
   public user: User;
 
   @OneToMany(() => Guess, (guess: Guess) => guess.location, {
