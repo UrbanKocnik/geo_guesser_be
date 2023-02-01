@@ -13,7 +13,7 @@ import {
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { TransformInterceptor } from 'src/common/response.interceptor';
-import { CreateLogArrayDto } from './dto/create-log-array.dto copy';
+import { CreateLogArrayDto } from './dto/create-log-array.dto';
 import { LoggerService } from './logger.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
