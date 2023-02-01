@@ -26,7 +26,6 @@ let envPath = `${process.cwd()}/src/config/env/dev.env`;
 if (process.env.NODE_ENV) {
   envPath = `${process.cwd()}/src/config/env/${process.env.NODE_ENV}.env`;
 }
-console.log(envPath);
 @Module({
   imports: [
     ConfigModule.forRoot({

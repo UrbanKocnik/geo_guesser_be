@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { AuthEmailLoginDto } from 'src/auth/dto/auth-email-login.dto';
 import { Role } from 'src/roles/entity/roles.entity';
 
-describe('AuthController (E2E)', () => {
+describe('RolesController (E2E)', () => {
   let app: INestApplication;
   beforeEach(async () => {
     const module = await Test.createTestingModule({}).compile();
@@ -103,7 +103,7 @@ describe('AuthController (E2E)', () => {
   });
 
   describe('Edit specific role as admin (PATCH) /roles/edit/:id', () => {
-    it('/roles/get/:id (GET) should return specified role', () => {
+    it('/roles/get/:id (GET) should edit specified role', () => {
       return request(`${rolesEndpoint}`)
         .patch(`/edit/${mockRole.id}`)
         .send({ name: '2test2' })
@@ -115,7 +115,7 @@ describe('AuthController (E2E)', () => {
   });
 
   describe('Delete specific role as admin (DELETE) /roles/delete/:id', () => {
-    it('/roles/delete/:id (DELETE) should return specified role', () => {
+    it('/roles/delete/:id (DELETE) should delete specified role', () => {
       return request(`${rolesEndpoint}`)
         .delete(`/delete/${mockRole.id}`)
         .set('authorization', `Bearer ${adminToken}`)
