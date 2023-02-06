@@ -12,10 +12,6 @@ export class CreateLocationDto {
 
   @ApiProperty()
   @IsOptional()
-  coordinates: string;
-
-  @ApiProperty()
-  @IsOptional()
   long: number;
 
   @ApiProperty()

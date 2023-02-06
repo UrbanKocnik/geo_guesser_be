@@ -5,7 +5,7 @@ import { RoleEnum } from 'src/roles/roles.enum';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
-import { CreateLogArrayDto } from './dto/create-log-array.dto copy';
+import { CreateLogArrayDto } from './dto/create-log-array.dto';
 import { Log } from './entity/logger.entity';
 
 @Injectable()

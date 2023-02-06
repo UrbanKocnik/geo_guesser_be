@@ -85,11 +85,9 @@ export class AuthService {
         email: dto.email,
         password: dto.password,
         role: RoleEnum.user,
-        hash,
         first_name: dto.first_name,
         last_name: dto.last_name,
       });
-
       return {
         message: 'User registered',
         data: created_user,
@@ -128,7 +126,7 @@ export class AuthService {
       });
       return {
         message: 'Forgot password email sent',
-        data: email,
+        data: { email, hash },
       };
     }
   }

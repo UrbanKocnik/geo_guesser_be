@@ -28,7 +28,9 @@ export class Guess {
   @Column()
   error_distance: number;
 
-  @ManyToOne(() => User, (user: User) => user.guesses)
+  @ManyToOne(() => User, (user: User) => user.guesses, {
+    onDelete: 'CASCADE',
+  })
   public user: User;
 
   @ManyToOne(() => Location, (location: Location) => location.guesses, {

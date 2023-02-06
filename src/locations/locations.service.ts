@@ -40,7 +40,6 @@ export class LocationsService extends AbstractService<Location> {
     const loggedUser = await this.getUser(user.id);
     const new_location = await super.create({
       name: locationDto.name,
-      coordinates: locationDto.coordinates,
       user: loggedUser,
       long: locationDto.long,
       lat: locationDto.lat,
@@ -62,8 +61,13 @@ export class LocationsService extends AbstractService<Location> {
   }
 
   async randomLocation() {
-    const result = await this.subLocationsRepository.randomLocation();
-    return result;
+    /*const result = await this.subLocationsRepository.randomLocation();
+    return result; */
+    return this.locationsRepository.query(`
+    SELECT *
+    FROM locations l
+    ORDER BY RANDOM()
+    LIMIT 1;`);
   }
 
   async getLocationGuesses(
@@ -180,7 +184,6 @@ export class LocationsService extends AbstractService<Location> {
   async deleteLocation(id: number, user: User): Promise<any> {
     const loggedUser = await this.getUser(user.id);
     const location = await super.findOne({ id }, ['user']);
-    console.log(location.user.id, loggedUser.id);
     if (location.user.id != loggedUser.id) {
       throw new HttpException(
         {

@@ -14,39 +14,43 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { Response } from 'express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { S3 } from 'aws-sdk';
 
 @Controller()
 export class UploadController {
+  constructor(private readonly configService: ConfigService) {}
+
   @ApiBearerAuth()
   @Post('upload')
-  @UseInterceptors(
-    FileInterceptor('image', {
-      //to nastavi local storage slik na mapo /uploads
-      storage: diskStorage({
-        destination: './uploads',
-        filename(_, file, callback) {
-          //to zgenerira random name ig
-          const randomName = Array(32)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          return callback(null, `${randomName}${extname(file.originalname)}`);
-        },
-      }),
-    }),
-  )
-  uploadFile(
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     configService: ConfigService,
   ) {
-    /*
-    const domain = configService.get('app.publicBackendDomain');
-    const img_url = domain + `/api/${file.path}`;
-    console.log(domain, img_url);*/
-    const img_url = `http://localhost:4000/api/${file.path}`;
+    const url = await this.uploadPublicFile(file.buffer, file.originalname);
     return {
-      url: img_url,
+      url,
     };
+  }
+
+  async uploadPublicFile(dataBuffer: Buffer, filename: string) {
+    const s3 = new S3();
+
+    const randomName = Array(32)
+      .fill(null)
+      .map(() => Math.round(Math.random() * 16).toString(16))
+      .join('');
+
+    const uploadResult = await s3
+      .upload({
+        ACL: 'public-read',
+        Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
+        Body: dataBuffer,
+        Key: `${randomName}-${filename}`,
+      })
+      .promise();
+
+    return uploadResult.Location;
   }
 
   @ApiBearerAuth()

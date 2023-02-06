@@ -28,7 +28,9 @@ export class Log {
   @Column()
   url: string;
 
-  @ManyToOne(() => User, (user: User) => user.log)
+  @ManyToOne(() => User, (user: User) => user.log, {
+    onDelete: 'CASCADE',
+  })
   public user: User;
 
   @Column({ nullable: true })
