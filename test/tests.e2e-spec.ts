@@ -105,8 +105,8 @@ describe('AppController (E2E)', () => {
     id: 0,
     url: 'http://localhost:3000/profile',
     action: 'scroll',
-    new_value: null,
-    component_type: null,
+    new_value: '',
+    component_type: '',
     action_date: new Date(Date.now()),
     createdAt: new Date(Date.now()),
     deletedAt: null,
@@ -144,8 +144,8 @@ describe('AppController (E2E)', () => {
   let hash = null;
   let adminToken = null;
   let userToken = null;
-  let mockRole: Role = null;
-  let mockLocation: Location = null;
+  let mockRole: Role;
+  let mockLocation: Location;
   // ------------------------------- AUTH TESTI -------------------------------
 
   it('/auth/register (POST) should return created user code', () => {
