@@ -13,7 +13,12 @@ import {
   Patch,
   Delete,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { TransformInterceptor } from 'src/common/response.interceptor';
 import { CreateLocationDto } from './dto/create-location.dto';
@@ -23,6 +28,7 @@ import { LocationsService } from './locations.service';
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(TransformInterceptor)
+@ApiTags('locations')
 @Controller('locations')
 export class LocationsController {
   constructor(private locationsService: LocationsService) {}
@@ -34,7 +40,7 @@ export class LocationsController {
   @Get('all')
   async all(
     @Query('page') page = 1,
-    @Query('take') take = 2,
+    @Query('take') take = 9,
     @Query('condition') condition = 'createdAt',
   ) {
     return this.locationsService.getLocations(page, take, condition);
@@ -47,6 +53,9 @@ export class LocationsController {
   }
 
   @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Fetches a random location from the database',
+  })
   @SerializeOptions({
     groups: ['exposeProvider'],
   })
@@ -56,6 +65,24 @@ export class LocationsController {
   }
 
   @ApiBearerAuth()
+  @ApiOperation({
+    summary:
+      'Returns logged in user guesses with smallest error distance together with guessed location',
+  })
+  @ApiQuery({
+    name: 'take',
+    required: false,
+    type: Number,
+    example: 3,
+    description: 'How many guesses you take per page',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    example: 1,
+    description: 'How many pages you want to load (page * take)',
+  })
   @SerializeOptions({
     groups: ['exposeProvider'],
   })
@@ -79,6 +106,9 @@ export class LocationsController {
   @SerializeOptions({
     groups: ['exposeProvider'],
   })
+  @ApiOperation({
+    summary: 'Returns locations added by the user',
+  })
   @Get('user')
   async userLocations(
     @Request() request,
@@ -99,6 +129,9 @@ export class LocationsController {
   @SerializeOptions({
     groups: ['exposeProvider'],
   })
+  @ApiOperation({
+    summary: 'Returns all guesses of the location with provided id',
+  })
   @Get('guesses/:id')
   async allGuessesOfLocation(
     @Param('id') id: number,
@@ -109,6 +142,9 @@ export class LocationsController {
     return this.locationsService.getLocationGuesses(id, page, take, condition);
   }
 
+  @ApiOperation({
+    summary: 'Returns data of the location with provided id',
+  })
   @ApiBearerAuth()
   @SerializeOptions({
     groups: ['exposeProvider'],

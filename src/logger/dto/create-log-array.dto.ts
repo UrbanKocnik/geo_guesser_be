@@ -3,7 +3,9 @@ import { IsNotEmpty } from 'class-validator';
 import { Log } from '../entity/logger.entity';
 
 export class CreateLogArrayDto {
-  @ApiProperty()
+  @ApiProperty({
+    type: [Log],
+  })
   @IsNotEmpty()
   logs: Log[];
 }

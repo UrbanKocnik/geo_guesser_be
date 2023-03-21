@@ -4,6 +4,7 @@ import { AbstractService } from 'src/common/abstract.service';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
+import { RoleDto } from './dto/role.dto';
 import { Role } from './entity/roles.entity';
 import { RoleEnum } from './roles.enum';
 
@@ -40,7 +41,7 @@ export class RolesService extends AbstractService<Role> {
       data: roles,
     };
   }
-  async addRole(user: User, name: string) {
+  async addRole(user: User, dto: RoleDto) {
     const loggedUser = await this.getUser(user.id);
     if (![RoleEnum.admin].includes(loggedUser.role.id)) {
       throw new HttpException(
@@ -53,7 +54,7 @@ export class RolesService extends AbstractService<Role> {
         HttpStatus.UNAUTHORIZED,
       );
     }
-    const role = await super.create({ name });
+    const role = await super.create({ name: dto.name });
     return {
       message: 'Role created',
       data: role,
@@ -80,7 +81,7 @@ export class RolesService extends AbstractService<Role> {
     };
   }
 
-  async editRole(user: User, id: number, name: string) {
+  async editRole(user: User, id: number, dto: RoleDto) {
     const loggedUser = await this.getUser(user.id);
     if (![RoleEnum.admin].includes(loggedUser.role.id)) {
       throw new HttpException(
@@ -93,7 +94,7 @@ export class RolesService extends AbstractService<Role> {
         HttpStatus.UNAUTHORIZED,
       );
     }
-    await super.update(id, { name });
+    await super.update(id, { name: dto.name });
     const role = await super.findOne({ id });
     return {
       message: 'Role edited',

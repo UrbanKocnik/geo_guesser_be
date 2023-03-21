@@ -19,7 +19,9 @@ export class CreateGuessDto {
   @IsOptional()
   lat: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Location,
+  })
   @IsNotEmpty()
   location: Location;
 }

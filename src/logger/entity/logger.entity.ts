@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Guess } from 'src/guesses/entity/guesses.entity';
 import { User } from 'src/users/entities/user.entity';
 import {

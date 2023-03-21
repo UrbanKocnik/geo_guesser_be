@@ -10,13 +10,12 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
 import { S3 } from 'aws-sdk';
 
 @Controller()
+@ApiTags('file upload')
 export class UploadController {
   constructor(private readonly configService: ConfigService) {}
 
@@ -51,14 +50,5 @@ export class UploadController {
       .promise();
 
     return uploadResult.Location;
-  }
-
-  @ApiBearerAuth()
-  @SerializeOptions({
-    groups: ['exposeProvider'],
-  })
-  @Get('uploads/:path')
-  async getImage(@Param('path') path, @Res() res: Response) {
-    res.sendFile(path, { root: 'uploads' });
   }
 }

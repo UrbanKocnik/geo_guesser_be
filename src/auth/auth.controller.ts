@@ -20,8 +20,9 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { AuthResetPasswordDto } from './dto/auth-reset-password.dto';
 import { AuthForgotPasswordDto } from './dto/auth-forgot-password.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
@@ -57,6 +58,9 @@ export class AuthController {
   @ApiBearerAuth()
   @SerializeOptions({
     groups: ['exposeProvider'],
+  })
+  @ApiOperation({
+    summary: 'Returns inforomation of the logged in user',
   })
   @Get('me')
   @UseGuards(JwtAuthGuard)

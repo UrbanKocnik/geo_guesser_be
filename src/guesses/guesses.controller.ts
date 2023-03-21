@@ -7,12 +7,13 @@ import {
   Request,
   Body,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { TransformInterceptor } from 'src/common/response.interceptor';
 import { CreateGuessDto } from './dto/create-guess.dto';
 import { GuessesService } from './guesses.service';
 
+@ApiTags('guesses')
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(TransformInterceptor)
